@@ -4,7 +4,7 @@
 	const nav = {
 		Menu: {
 			Quotes: '/',
-			QuoteAPIv1: '/api/v1/quotes',
+			QuoteAPIv1: '/api/v1/quotes'
 			// Admin: '/admin'
 		}
 	};
@@ -23,7 +23,9 @@
 		/>
 	</Wrapper>
 
-	<slot />
+	<main>
+		<slot />
+	</main>
 
 	<Wrapper>
 		<Footer />
@@ -31,18 +33,7 @@
 </Branding>
 
 <style>
-	:global(body) {
-		scroll-snap-type: y proximity;
-		background: var(--c-blue);
-	}
-	:global(div :has(footer)) {
-		padding-top: 4rem !important;
-		padding-bottom: 2rem !important;
-		margin-bottom: 0 !important;
-		background: var(--c-blue);
-	}
-	:global(.branding:nth-last-of-type(2)) {
-		margin-top: -2.1rem;
-		background: var(--c-blue);
+	main {
+		container-type: inline-size;
 	}
 </style>
