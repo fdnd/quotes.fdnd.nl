@@ -5,7 +5,7 @@
 		Menu: {
 			Quotes: '/',
 			QuoteAPIv1: '/api/v1/quotes',
-			Admin: '/admin'
+			// Admin: '/admin'
 		}
 	};
 </script>

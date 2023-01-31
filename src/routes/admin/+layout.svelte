@@ -4,7 +4,6 @@
 	import { page } from '$app/stores';
 
 	let user = $page.data.session.user;
-	console.log(user);
 </script>
 
 <aside>
