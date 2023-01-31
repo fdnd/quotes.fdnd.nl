@@ -5,6 +5,7 @@ import { HYGRAPH_KEY, HYGRAPH_URL } from '$env/static/private';
 export const actions = {
 	default: async ({ request }) => {
 		const fdata = await request.formData();
+		const quoteId = fdata.get('quoteId');
 		const text = fdata.get('text');
 		const author = fdata.get('author');
 
@@ -15,8 +16,14 @@ export const actions = {
 
 		// See mutations: https://hygraph.com/docs/api-reference/content-api/mutations
 		const mutation = gql`
-			mutation addQuote($text: String!, $author: String!) {
-				createQuote(data: { text: $text, author: $author }) {
+			mutation upsertQuote($id: ID!, $text: String!, $author: String!) {
+				upsertQuote(
+					where: { id: $id }
+					upsert: {
+						create: { text: $text, author: $author }
+						update: { text: $text, author: $author }
+					}
+				) {
 					id
 					text
 					author
@@ -24,6 +31,7 @@ export const actions = {
 			}
 		`;
 		const vars = {
+			id: quoteId,
 			text: text,
 			author: author
 		};
@@ -37,9 +45,29 @@ export const actions = {
 				}
 			}
 		`;
-		const pubVars = { id: data.createQuote.id };
+		const pubVars = { id: data.upsertQuote.id };
 		const pubData = await hygraph.request(publication, pubVars);
 
 		return pubData;
 	}
 };
+
+// Load the quotes from hygraph
+export async function load() {
+	const hygraph = new GraphQLClient(HYGRAPH_URL, {
+		headers: { Authorization: `Bearer ${HYGRAPH_KEY}` }
+	});
+
+	const query = gql`
+    query getQuotes() {
+      quotes(last: 100, orderBy: createdAt_DESC) {
+        id
+        text
+        author
+      }
+    }
+  `;
+
+	const data = await hygraph.request(query);
+	return data;
+}

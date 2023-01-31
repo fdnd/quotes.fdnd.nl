@@ -10,7 +10,7 @@ export async function load() {
 	// See for gql style queries: https://www.npmjs.com/package/graphql-request#graphql-mutations
 	const query = gql`
     query getQuotes() {
-      quotes() {
+      quotes(last: 100, orderBy: createdAt_DESC) {
         id
         text
         author
